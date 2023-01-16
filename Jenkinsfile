@@ -44,7 +44,7 @@ pipeline {
          stage("Publish to Nexus Repository Manager") {
             steps {
                 echo 'Publish to Nexus Repository Manager...'
-                dir('./'){
+                dir('./target'){
                     script {
                     pom = readMavenPom file: "pom.xml";
                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
