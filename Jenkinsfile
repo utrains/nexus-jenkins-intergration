@@ -44,7 +44,7 @@ pipeline {
          stage("Publish to Nexus Repository Manager") {
             steps {
                 echo 'Publish to Nexus Repository Manager...'
-                dir('./nexus-jenkins-intergration/'){
+                dir('./'){
                     script {
                     pom = readMavenPom file: "pom.xml";
                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
