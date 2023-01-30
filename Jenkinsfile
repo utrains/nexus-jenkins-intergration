@@ -14,30 +14,23 @@ pipeline {
         NEXUS_REPOSITORY = "utrains-nexus-pipeline"
         NEXUS_CREDENTIAL_ID = "Nexus"
 
-        // imageName = "fastfood"
-        // registryCredentials = "Nexus"
-        // registry = "139.177.192.139:8085/repository/utrains-nexus-registry/"
-        // dockerImage = ''
-
-        //Declare the variable version
-        POM_VERSION = ''
-        BUILD_NUM = "${env.BUILD_ID}"
-
+        imageName = "geolocation"
+        registryCredentials = "Nexus"
+        registry = "198.74.52.93:8085/repository/docker-nexus-repo/"
+        dockerImage = ''
     }
 
     stages {
 
-      
 
-    
-
-         stage("Maven Build Back-End") {
+         stage("Maven Build goelocation") {
             steps {
-                echo 'Build Back-End Project...'
-                script {
-                sh "mvn package -DskipTests=true -Dspring.profiles.active=test"
+                echo 'Goelocation app...'
+                dir('./'){
+                    script {
+                    sh "mvn package -DskipTests=true"
+                    }
                 }
-                
             }
         }
 
@@ -80,69 +73,30 @@ pipeline {
             }
         }
         
-        // // Building Docker images
-        // stage("Build Docker Image"){
-        //     steps{
-        //         echo 'Build Docker Image'
-        //         dir('./fastfood_backend/'){
-        //             script{
-        //                 dockerImage = docker.build imageName
-        //             }
-        //         }
-        //     }
-        // }
+        // Building Docker images
+        stage("Build Docker Image"){
+            steps{
+                echo 'Build Docker Image'
+                dir('./'){
+                    script{
+                        dockerImage = docker.build imageName
+                    }
+                }
+            }
+        }
 
-        // // Push Docker images to Nexus Registry
-        // stage("Uploading to Nexus Registry"){
-        //     steps{
-        //         echo 'Uploading Docker image to Nexus ...'
-        //         dir('./fastfood_backend/'){
-        //             script{
-        //                 pom = readMavenPom file: "pom.xml";
-        //                 POM_VERSION = pom.version
-        //                 docker.withRegistry( 'http://'+registry, registryCredentials ) {
-                        
-        //                 //Tag the Docker Image  with the version that is in the pom file.
-        //                 // This version is often changed before a new release. 
-        //                 dockerImage.push("${POM_VERSION}")
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // //Backend Helm Chart push as tgz file
-        // stage("pushing the Backend helm charts to nexus"){
-        //     steps{
-        //         script{
-        //             withCredentials([string(credentialsId: 'nexus-pass', variable: 'docker_password')]) {
-        //                   dir('fastfood_backend/') {
-        //                      sh '''
-        //                          helmversion=$( helm show chart helm_fastfood_back | grep version | cut -d: -f 2 | tr -d ' ')
-        //                          tar -czvf  helm_fastfood_back-${helmversion}.tgz helm_fastfood_back/
-        //                          curl -u jenkins-user:$docker_password http://139.177.192.139:8081/repository/fastfood-helm-rep/ --upload-file helm_fastfood_back-${helmversion}.tgz -v
-        //                     '''
-        //                   }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // //Frontend Helm Chart push as tgz file
-        // stage("pushing the Frontend helm charts to nexus"){
-        //     steps{
-        //         script{
-        //             withCredentials([string(credentialsId: 'nexus-pass', variable: 'docker_password')]) {
-        //                   dir('fastfood_frontend/') {
-        //                      sh '''
-        //                          helmversion=$( helm show chart helm_fastfood_back | grep version | cut -d: -f 2 | tr -d ' ')
-        //                          tar -czvf  helm_fastfood_front-${helmversion}.tgz helm_fastfood_front/
-        //                          curl -u jenkins-user:$docker_password http://139.177.192.139:8081/repository/fastfood-helm-rep-front/ --upload-file helm_fastfood_front-${helmversion}.tgz -v
-        //                     '''
-        //                   }
-        //             }
-        //         }
-        //     }
-        // }      
+        // Push Docker images to Nexus Registry
+        stage("Uploading to Nexus Registry"){
+            steps{
+                echo 'Uploading Docker image to Nexus ...'
+                dir('./'){
+                    script{
+                        docker.withRegistry( 'http://'+registry, registryCredentials ) {
+                        dockerImage.push('latest')
+                        }
+                    }
+                }
+            }
+        }   
     }
 }
