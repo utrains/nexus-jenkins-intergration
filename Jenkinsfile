@@ -16,7 +16,7 @@ pipeline {
 
         imageName = "geolocation"
         registryCredentials = "Nexus"
-        registry = "198.74.52.93:8081/repository/docker-nexus-repo/"
+        registry = "198.74.52.93:8085/repository/docker-nexus-repo/"
         dockerImage = ''
     }
 
