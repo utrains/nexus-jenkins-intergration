@@ -97,6 +97,21 @@ pipeline {
                     }
                 }
             }
-        }   
+        } 
+           //Project Helm Chart push as tgz file
+        stage("pushing the Backend helm charts to nexus"){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: registryCredentials )]) {
+                       
+                        sh '''
+                            helmversion=$( helm show chart fastfoodapp | grep version | cut -d: -f 2 | tr -d ' ')
+                            tar -czvf  Geo-helm-${helmversion}.tgz Geo-helm/
+                            curl -u jenkins-user:$docker_password http://198.74.52.93:8081/repository/geo-helm/ --upload-file Geohelm-${helmversion}.tgz -v
+                        '''
+                    }
+                }
+            }
+        }  
     }
 }
