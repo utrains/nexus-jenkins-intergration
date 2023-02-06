@@ -107,7 +107,7 @@ pipeline {
                         sh '''
                             helmversion=$( helm show chart Geo-helm | grep version | cut -d: -f 2 | tr -d ' ')
                             tar -czvf  Geo-helm-${helmversion}.tgz Geo-helm/
-                            curl -v $user:$pass http://198.74.52.93:8081/repository/helm/ --upload-file Geohelm-${helmversion}.tgz -v
+                            curl -u $user:$pass http://198.74.52.93:8081/repository/helm/ --upload-file Geohelm-${helmversion}.tgz -v
                         '''
                     }
                 }
