@@ -102,7 +102,7 @@ pipeline {
         stage("pushing the Backend helm charts to nexus"){
             steps{
                 script{
-                    withCredentials([string(credentialsId: registryCredentials, usernameVariable :user, passwordVariable :pass )]) {
+                    withCredentials([string(credentialsId: registryCredentials, usernameVariable :"user", passwordVariable :"pass" )]) {
                        
                         sh '''
                             helmversion=$( helm show chart fastfoodapp | grep version | cut -d: -f 2 | tr -d ' ')
