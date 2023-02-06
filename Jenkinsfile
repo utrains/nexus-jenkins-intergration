@@ -105,6 +105,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: registryCredentials, usernameVariable: 'user', passwordVariable: 'pass' )]) {
                         def user= env.user
                         def pass= env.pass
+                        echo "username is $user "
                         sh '''
                             helmversion=$( helm show chart Geo-helm | grep version | cut -d: -f 2 | tr -d ' ')
                             tar -czvf  Geo-helm-${helmversion}.tgz Geo-helm/
