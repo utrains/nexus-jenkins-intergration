@@ -102,7 +102,7 @@ pipeline {
         stage("pushing the Backend helm charts to nexus"){
             steps{
                 script{
-                    withCredentials([usernamePassword(credentialsId: registryCredentials, usernameVariable :"user", passwordVariable :"pass" )]) {
+                    withCredentials([usernamePassword(credentialsId: registryCredentials, usernameVariable : 'user', passwordVariable :'pass' )]) {
                        
                         sh '''
                             helmversion=$( helm show chart Geo-helm | grep version | cut -d: -f 2 | tr -d ' ')
