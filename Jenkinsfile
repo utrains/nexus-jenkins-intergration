@@ -103,7 +103,8 @@ pipeline {
             steps{
                 script{
                     withCredentials([usernamePassword(credentialsId: registryCredentials, usernameVariable: 'user', passwordVariable: 'pass' )]) {
-                       
+                        def user= env.user
+                        def pass= env.pass
                         sh '''
                             helmversion=$( helm show chart Geo-helm | grep version | cut -d: -f 2 | tr -d ' ')
                             tar -czvf  Geo-helm-${helmversion}.tgz Geo-helm/
