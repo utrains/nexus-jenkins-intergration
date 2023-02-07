@@ -108,7 +108,7 @@ pipeline {
                         echo "username is $user "
                         echo "username is $pass "
                         sh '''
-                            echo ${user}
+                            echo '''+user+'''
                             helmversion=$( helm show chart Geo-helm | grep version | cut -d: -f 2 | tr -d ' ')
                             tar -czvf  Geo-helm-${helmversion}.tgz Geo-helm/
                             curl -v -u admin:$pass http://198.74.52.93:8081/repository/geohelm/ --upload-file Geo-helm-${helmversion}.tgz 
